@@ -1,22 +1,40 @@
-import express, { Request, Response, NextFunction } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
+import express, { Request as ReqType, Response, NextFunction } from "express";
+import { Query as ReqQuery } from "express-serve-static-core";
+import gm from "gm";
+import axios from "axios";
+
+gm.subClass({ imageMagick: true })
+
 const router = express.Router();
 
-interface ThumbParams extends ParamsDictionary {
+interface Query extends ReqQuery {
   url: string,
   fileType?: string,
   dimensions?: string
 }
 
-/* GET home page. */
-router.get('/', (req: Request<ThumbParams>, res: Response, next: NextFunction) => {
-  const {
-    params
-  } = req;
+interface Request extends ReqType {
+  query: Query
+}
 
-  res.json({
-    data: "Great!"
-  })
+/* GET home page. */
+router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+  const {
+    query
+  } = req;
+  try {
+    const response = await axios.get(query.url, { responseType: 'arraybuffer' });
+    gm(response.data) // The name of your pdf
+      .setFormat("jpg")
+      .resize(500) // Resize to fixed 200px width, maintaining aspect ratio
+      .quality(90) // Quality from 0 to 100
+      .stream((err, stdout) => {
+        stdout.pipe(res)
+      })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json(error)
+  }
 });
 
 export default router;

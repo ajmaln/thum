@@ -7,20 +7,25 @@
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "actual_start": "node dist/bin/www.js",
-    "start": "nodemon --exec ts-node bin/www.ts --watch src -e ts",
+    "start": "nodemon --exec ts-node bin/www.ts --watch src/*/* -e ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@types/pdf-thumbnail": "^1.0.0",
+    "axios": "^0.19.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "gm": "^1.23.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "pdf-thumbnail": "^1.0.6"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.7",
+    "@types/gm": "^1.18.9",
     "@types/http-errors": "^1.8.0",
     "@types/morgan": "^1.9.1",
     "nodemon": "^2.0.4",
